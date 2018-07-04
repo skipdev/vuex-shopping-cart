@@ -19,6 +19,18 @@ export default new Vuex.Store({
     availableProducts (state, getters) {
       //checking whether a product is in stock
       return state.products.filter(product => product.inventory > 0)
+    },
+
+    cartProducts (state) {
+      return state.cart.map(cartItem => {
+        //getting the actual product
+        const product = state.products.find(product => product.id === cartItem.id)
+        return {
+          title: product.title,
+          price: product.price,
+          quantity: cartItem.quantity
+        }
+      })
     }
   },
   //actions == methods
