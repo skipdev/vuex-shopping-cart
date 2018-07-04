@@ -14,7 +14,8 @@
     //below will return products from the state
     computed: {
       products () {
-        return store.state.products
+        //getting only products that are in stock
+        return store.getters.availableProducts
       }
     },
     //everything below will run right after the instance is created

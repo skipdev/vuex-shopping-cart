@@ -9,9 +9,13 @@ export default new Vuex.Store({
     products: []
   },
   //getters == computed properties
+  //good for calculating or filtering something on runtime (eg. live total)
+  //first parameter is always state, second is getters
   getters: {
-    productsCount () {
-      //...
+    //creating a getter that will give us the available products
+    availableProducts (state, getters) {
+      //checking whether a product is in stock
+      return state.products.filter(product => product.inventory > 0)
     }
   },
   //actions == methods
