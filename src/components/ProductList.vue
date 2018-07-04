@@ -9,16 +9,20 @@
 
 <script>
   import shop from '@/api/shop'
+  import store from '@/store/index'
   export default {
-    data () {
-      return {
-        products: []
+    //below will return products from the state
+    computed: {
+      products () {
+        return store.state.products
       }
     },
     //everything below will run right after the instance is created
     created () {
       shop.getProducts(products => {
-        this.products = products
+        // this.products = products
+        //commit the name of the mutation and payload (2nd parameter)
+        store.commit('setProducts', products)
       })
     }
   }
