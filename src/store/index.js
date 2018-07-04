@@ -7,7 +7,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   //state == data
   state: {
-    products: []
+    products: [],
+    //holding product id and the amount being purchased
+    cart: []
   },
   //getters == computed properties
   //good for calculating or filtering something on runtime (eg. live total)
@@ -30,12 +32,26 @@ export default new Vuex.Store({
         //make the AJAX call
         //run setProducts mutation
         shop.getProducts(products => {
-          // this.products = products
+          //this.products = products
           //commit the name of the mutation and payload (2nd parameter)
           commit('setProducts', products)
           resolve()
         })
       })
+    },
+
+    addProductToCart (context, product) {
+      if (product.inventory > 0) {
+        //checking inventory has at least 1 product available
+        const cartItem = context.state.cart.find(item => item.id === product.id)
+        if (!cartItem) {
+          context.commit('pushProductToCart', product.id)
+        } else {
+          context.commit('incrementItemQuantity', cartItem)
+        }
+        //decreases product inventory when user adds a product
+        context.commit('decrementProductInventory', product)
+      }
     }
   },
     // *EXAMPLE ACTION BELOW*
@@ -50,10 +66,26 @@ export default new Vuex.Store({
   //mutations == responsible for setting/updating state
   //should be as simple as possible
   //'state' should ALWAYS be first parameter
+  //2nd parameter is what you are affecting
   mutations: {
     setProducts (state, products) {
       //update products
       state.products = products
+    },
+
+    pushProductToCart (state, productId) {
+      state.cart.push({
+        id: productId,
+        quantity: 1
+      })
+    },
+
+    incrementItemQuantity (state, cartItem) {
+      cartItem.quantity++
+    },
+
+    decrementProductInventory (state, product) {
+      product.inventory--
     }
   }
 })
