@@ -12,7 +12,6 @@
 </template>
 
 <script>
-  import store from '@/store/index'
   export default {
     data () {
       return {
@@ -23,13 +22,13 @@
     computed: {
       products () {
         //getting only products that are in stock
-        return store.getters.availableProducts
+        return this.$store.getters.availableProducts
       }
     },
     //everything below will run right after the instance is created
     created () {
       this.loading = true
-      store.dispatch('fetchProducts')
+      this.$store.dispatch('fetchProducts')
         .then(() => this.loading = false)
     }
   }
